@@ -1,7 +1,7 @@
 import shutil
-from unittest import TestCase
 
 from django.core.files.base import ContentFile
+from django.test import TestCase
 from PIL import Image
 from urllib3.packages.six import BytesIO
 
@@ -11,7 +11,6 @@ from tests.example.models import News
 class StorageTest(TestCase):
     def tearDown(self):
         "Hook method for deconstructing the test fixture after testing it."
-        News.objects.all().delete()
         shutil.rmtree("uploads")
 
     # =======================================================================
