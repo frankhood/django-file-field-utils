@@ -8,10 +8,6 @@ Django File Field Utils
 .. image:: https://readthedocs.org/projects/pip/badge/?version=latest&style=flat-square
     :target: https://django-file-field-utils.readthedocs.io/en/latest/
 
-.. image:: https://img.shields.io/coveralls/github/frankhood/django-file-field-utils/main?style=flat-square
-    :target: https://coveralls.io/github/frankhood/django-file-field-utils?branch=main
-    :alt: Coverage Status
-
 This package is a set of field and widget that improves the images and files field behaviour
 
 Documentation
@@ -36,23 +32,56 @@ Add it to your `INSTALLED_APPS`:
         ...
     )
 
-Add Django File Field Utils's URL patterns:
-
-.. code-block:: python
-
-    from file_field_utils import urls as file_field_utils_urls
-
-
-    urlpatterns = [
-        ...
-        url(r'^', include(file_field_utils_urls)),
-        ...
-    ]
-
 Features
 --------
 
-* TODO
+* A image-field that support also svg files
+
+**Example of usage**
+
+.. code-block:: python
+
+    image = SVGAndImageField(_("Image"), blank=True)
+
+* An admin widget that get the preview of image-field
+
+
+**Example of usage**
+
+.. code-block:: python
+
+    from file_field_utils.db.widgets import ConfigurableImageWidget
+
+    class NewsAdminForm(forms.ModelForm):
+        class Meta:
+            model = News
+            widgets = {
+                'image': ConfigurableImageWidget()
+            }
+
+    @admin.register(News)
+    class NewsAdmin(admin.ModelAdmin):
+        form = NewsAdminForm
+
+* Method for media file upload path support in file fields
+
+**Example of usage**
+
+.. code-block:: python
+
+    image = ImageField(_("Image"), upload_to=UploadPath("example"), blank=True)
+
+The image of model instance will be upload under directory:
+    /media/uploads/<instance_model_app_label>/<instance_model_name>/example/
+
+
+.. code-block:: python
+
+    image = ImageField(_("Image"), upload_to=UploadPathWithID("example"), blank=True)
+
+The image of model instance will be upload under directory:
+    /media/uploads/<instance_model_app_label>/<instance_model_name>/example/<instance_id>/
+
 
 Running Tests
 -------------
