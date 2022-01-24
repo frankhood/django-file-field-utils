@@ -26,15 +26,22 @@ Install Django File Field Utils::
 
     pip install django-file-field-utils
 
-Add it to your `INSTALLED_APPS`:
+You need to add *easy_thumbnails* to `INSTALLED_APPS`:
 
 .. code-block:: python
 
     INSTALLED_APPS = (
         ...
-        'file_field_utils',
+        'easy_thumbnails',
         ...
     )
+
+Run
+
+.. code-block:: python
+
+    python manage.py migrate easy_thumbnails
+
 
 Features
 --------
