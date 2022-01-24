@@ -17,9 +17,7 @@ __________________
 
 __________________
 
-0.1.4 (2022-01-24)
+0.1.5 (2022-01-24)
 
-* Update requirements and readme
-
-__________________
+* Update requirements and readme.
 
