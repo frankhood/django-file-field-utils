@@ -8,6 +8,10 @@ Django File Field Utils
 .. image:: https://readthedocs.org/projects/pip/badge/?version=latest&style=flat-square
     :target: https://django-file-field-utils.readthedocs.io/en/latest/
 
+.. image:: https://img.shields.io/coveralls/github/frankhood/django-file-field-utils/main?style=flat-square
+    :target: https://coveralls.io/github/frankhood/django-file-field-utils?branch=main
+    :alt: Coverage Status
+
 This package is a set of field and widget that improves the images and files field behaviour
 
 Documentation
