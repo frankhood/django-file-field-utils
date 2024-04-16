@@ -107,3 +107,80 @@ class ConfigurableImageWidget(AdminFileWidget):
                 raise
         output.append(super(AdminFileWidget, self).render(name, value, attrs))
         return mark_safe(u''.join(output))
+
+
+class PreviewImageWidget(AdminFileWidget):
+    class Media:
+        css = {"all": ("admin/css/admin_form_overrides.css",)}
+
+    def get_image_html(self, value, thumbnail):
+        output_html = """
+            <div class="box img-preview" style="border:2px solid #9AB8D6;float:left;margin-right:5px;">
+                <h4 style="text-align:center;color:#fff;background:#9AB8D6;">%s</h4>
+                <a target="_blank" href="%s"><img src="%s" alt="%s" /></a>
+            </div>%s """ % (
+            _("Preview"),
+            value.url,
+            thumbnail.url,
+            path.split(value.url)[-1],
+            _("Change:"),
+        )
+        return output_html
+
+    def get_image_opts(self):
+        return {"size": (60, 60), "crop": "smart"}
+
+    def render(self, name, value, attrs=None, **kwargs):
+        output = []
+        if value and hasattr(value, "url"):
+            try:
+                realname = re.sub(r"^(\w+)-(\d+)-", "", name)
+                image_preview = getattr(value.instance, realname)
+                opts = self.get_image_opts()
+                thumbnail = get_thumbnailer(image_preview).get_thumbnail(opts)
+                output.append(self.get_image_html(value, thumbnail))
+            except IOError:
+                pass
+            except InvalidImageFormatError:
+                logger.info("File con formato non previsto")
+            except Exception:
+                raise
+        output.append(super(AdminFileWidget, self).render(name, value, attrs))
+        return mark_safe("".join(output))
+
+
+class PreviewGenericImageWidget(PreviewImageWidget):
+    # Fixato apparentemente in data 1/06/2015
+
+    def get_image_html(self, value, thumbnail):
+        output_html = """
+            <div class="box img-preview" style="float:left;margin-right:5px;">
+                <a target="_blank" href="%s"><img src="%s" alt="%s" /></a>
+            </div>%s """ % (
+            value.url,
+            thumbnail.url,
+            path.split(value.url)[-1],
+            _("Change:"),
+        )
+        return output_html
+
+    def render(self, name, value, attrs=None, **kwargs):
+        output = []
+        if value and hasattr(value, "url"):
+            try:
+                realname = re.sub(r"^(\w+)-(\d+)-", "", name)
+                realname_splitted = realname.split("-")
+                img_name = realname_splitted[-1]
+                image_preview = getattr(value.instance, img_name)
+                opts = self.get_image_opts()
+                thumbnail = get_thumbnailer(image_preview).get_thumbnail(opts)
+                output.append(self.get_image_html(value, thumbnail))
+            except IOError:
+                print("IOError")
+                logger.info("IOError")
+            except InvalidImageFormatError:
+                logger.info("File con formato non previsto")
+            except Exception:
+                logger.exception("PreviewGenericImageWidget error")
+        output.append(super(AdminFileWidget, self).render(name, value, attrs))
+        return mark_safe("".join(output))
